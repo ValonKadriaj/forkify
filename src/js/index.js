@@ -8,26 +8,16 @@ import * as listView from './views/listView';
 import * as likesView from './views/likesView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
-/** Global state of the app
- * - Search object
- * - Current recipe object
- * - Shopping list object
- * - Liked recipes
- */
+
 const state = {};
 
-/** 
- * SEARCH CONTROLLER
- */
+
 const controlSearch = async () => {
-    // 1) Get query from view
     const query = searchView.getInput();
 
     if (query) {
-        // 2) New search object and add to state
         state.search = new Search(query);
 
-        // 3) Prepare UI for results
         searchView.clearInput();
         searchView.clearResults();
         renderLoader(elements.searchRes);
@@ -59,9 +49,6 @@ elements.searchResPages.addEventListener('click', e => {
 });
 
 
-/** 
- * RECIPE CONTROLLER
- */
 const controlRecipe = async () => {
     const id = window.location.hash.replace('#', '');
 
@@ -97,14 +84,9 @@ const controlRecipe = async () => {
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
 
-/** 
- * LIST CONTROLLER
- */
 const controlList = () => {
-    // Create a new list IF there in none yet
     if (!state.list) state.list = new List();
 
-    // Add each ingredient to the list and UI
     state.recipe.ingredients.forEach(el => {
         const item = state.list.addItem(el.count, el.unit, el.ingredient);
         listView.renderItem(item);
@@ -127,10 +109,6 @@ elements.shopping.addEventListener('click', e => {
     }
 });
 
-
-/** 
- * LIKE CONTROLLER
- */
 const controlLike = () => {
     if (!state.likes) state.likes = new Likes();
     const currentID = state.recipe.id;
